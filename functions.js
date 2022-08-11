@@ -58,8 +58,9 @@ function movePlayer(a){
 
  
 
-    let player = document.getElementsByClassName("entity-player");
-    let playerPos = player[0];
+  let player = document.getElementsByClassName(Entities.Character)[0];
+  console.log(player)
+    let playerPos = player;
     let playerXcoordinate = playerPos.id.split(',')[0];
     let playerYcoordinate = playerPos.id.split(',')[1];
 
@@ -138,7 +139,7 @@ function tiles(value){
 
  
 let player = document.querySelectorAll(".entity-player");
-console.log("Player pos: " , player);
+
  
 
 addEventListener("keydown", function (event) {
@@ -162,10 +163,9 @@ addEventListener("keydown", function (event) {
       movePlayer('d');
     break;
 
-    case "X" || "x" :
+    default:
 
-
-
+        console.log('No options');
     break;
     
 }
