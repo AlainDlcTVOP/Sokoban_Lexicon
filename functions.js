@@ -1,255 +1,107 @@
-
 const drawMap = () => {
-    document.getElementById("game-board").innerHTML ="";
-  
-    //2. drow board
 
-    
-    for(let w = 0; w<tileMap01.mapGrid.length; w++)
+  document.getElementById("game-board").innerHTML ="";
+
+
+  //2. draw board
+
+  for(let y = 0; y<tileMap01.mapGrid.length;y ++)
+  {
+    const row = tileMap01.mapGrid[y]
+    for(let x =0; x<row.length;x++)
     {
-     
-      const row = tileMap01.mapGrid[w]
-      console.log(row);
-      for(let x =0; x<row.length;x++)
-      {
+      let div = document.createElement("div");
 
-       
-        let div = document.createElement("div");
-        //every cells has it's unique id
-        div.id = `${x},${w}`;
-        //add list of classes for each cell
-
-        
-        div.classList.add("tile-space");   
-       
-        if(row[x][0] !==" "){
-        
-            div.classList.add( ...row[x][0].split(" ").map(tiles));
-          }
-         
-
-        document.getElementById("game-board").appendChild(div);
-      }    
+      if (tileMap01.mapGrid[y][x] =="P"){
+          div.classList.add(Entities.Character);
+          //div.classList.add(Entities.Space);
+      }
+      else if (tileMap01.mapGrid[y][x] =="W") {
+        div.classList.add(Tiles.Wall);
     }
+    else if (tileMap01.mapGrid[y][x] =="B") {
+        div.classList.add(Entities.Block);
+        //div.classList.add(Entities.Space);
+    }
+    else if (tileMap01.mapGrid[y][x] =="G") {
+      div.classList.add(Tiles.Goal);
+    }
+      else  {
+          div.classList.add(Tiles.Space);
+      }
+      //every cells has it's unique id
+      div.id = `${x},${y}`;
+
+      //add list of classes for each cell
+      div.classList.add("tile");
+
+      /*if(row[x][0] !==" "){
+          div.classList.add( ...row[x][0].split(" ").map(tiles));
+        }*/
+
+      document.getElementById("game-board").append(div);
+    }   
+  }
 };
+
 
 drawMap();
 
+function movePlayer(a){
+  let offsetXcoord = 0;
+  let offsetYcoord = 0;
 
-function tiles(value){
-  switch(value){
-    case "W":
-      return Tiles.Wall;
-      break;
-    case " ":
-      return Tiles.Space;
-      break;
-    case "G":
-      return Tiles.Goal;
-      break;    
-    case "P":
-      return Entities.Character;
-      break;
-  
-    case "B":
-      return Entities.Block;
-      break;
-    case "BD":
-      return Entities.BlockDone;
-      break;
-    
+  if (a==='r') { offsetXcoord = 1}
+  if (a==='l') { offsetXcoord = -1}
+  if (a==='u') { offsetYcoord = -1}
+  if (a==='d') { offsetYcoord = 1}
 
-}
-}
+ 
 
-
-
-
-
-
- function movePlayer(a){
-  if (a==='r') {
-    let player = document.getElementsByClassName("entity-player");
-    let playerPos = player[0];
-    
-    let playerXcoordinate = playerPos.id.split(',')[0];
-    let playerYcoordinate = playerPos.id.split(',')[1];
-
-    playerXcoordinate++;
-
-    let blockXcoordinate = playerXcoordinate+1;
-    let blockYcoordinate = playerYcoordinate;
-    
-
-    let nextId=playerXcoordinate +',' + playerYcoordinate;
-    let nextTile = document.getElementById(nextId);
-    let nextIdBlock=blockXcoordinate + ',' + blockYcoordinate;
-    let nextTileBlock = document.getElementById(nextIdBlock);
-
-    if (!nextTile.classList.contains('tile-wall')) {
-      nextTile.classList.remove('tile-space');
-      nextTile.classList.add('entity-player');
-      playerPos.classList.remove('entity-player');
-      playerPos.classList.add('tile-space');
-      }
-
-     
-
-    if (nextTile.classList.contains('entity-block')) 
-    {
-      if (!nextTileBlock.classList.contains('tile-wall')){
-        nextTile.classList.remove('tile-space');
-        nextTile.classList.add('entity-player');
-        nextTile.classList.remove('entity-block');
-        playerPos.classList.remove('entity-player');
-        playerPos.classList.add('tile-space');
-        nextTileBlock.classList.remove('tile-space');
-        nextTileBlock.classList.add('entity-block');
-      }
-
-      if (nextTileBlock.classList.contains('tile-goal')) 
-      {
-        console.log('Gul djävel');
-        nextTileBlock.classList.remove('tile-goal');
-        nextTileBlock.classList.add('entity-block');
-      }
-
-      }
-
-  } // Move Player Right
-
-  //  Move Player Up
-  if (a==='u') {
     let player = document.getElementsByClassName("entity-player");
     let playerPos = player[0];
     let playerXcoordinate = playerPos.id.split(',')[0];
     let playerYcoordinate = playerPos.id.split(',')[1];
-    
-    playerYcoordinate--;
 
-    let blockXcoordinate = playerXcoordinate;
-    let blockYcoordinate = playerYcoordinate - 1;
+    let playerNextXcoordinate = Math.floor(playerXcoordinate) + offsetXcoord;
+    let playerNextYcoordinate = Math.floor(playerYcoordinate) + offsetYcoord;
+    let playerNextId = `${playerNextXcoordinate},${playerNextYcoordinate}`;
+    console.log(playerNextId);
 
-    let nextId=playerXcoordinate+','+playerYcoordinate;
-    let nextTile = document.getElementById(nextId);
-    let nextIdBlock=blockXcoordinate + ',' + blockYcoordinate;
-    let nextTileBlock = document.getElementById(nextIdBlock);
+    let targetPos = document.getElementById(playerNextId);
 
-    if (!nextTile.classList.contains('tile-wall')) {
-    nextTile.classList.remove('tile-space');
-    nextTile.classList.add('entity-player');
-    playerPos.classList.remove('entity-player');
-    playerPos.classList.add('tile-space');
+    if (targetPos.classList.contains('tile-wall')) {
+      return;
     }
 
-    if (nextTile.classList.contains('entity-block')) 
-    {
-      if (!nextTileBlock.classList.contains('tile-wall')){
-        nextTile.classList.remove('tile-space');
-        nextTile.classList.add('entity-player');
-        nextTile.classList.remove('entity-block');
-        playerPos.classList.remove('entity-player');
-        playerPos.classList.add('tile-space');
-        nextTileBlock.classList.remove('tile-space');
-        nextTileBlock.classList.add('entity-block');
+    if (targetPos.classList.contains(Entities.Block)) {
+      let boxNextXcoordinate = Math.floor(playerXcoordinate) + offsetXcoord*2;
+      let boxNextYcoordinate = Math.floor(playerYcoordinate) + offsetYcoord*2;
+      let boxNextId = `${boxNextXcoordinate},${boxNextYcoordinate}`;
+      let afterBoxPos = document.getElementById(boxNextId);
+      console.log(boxNextId);
+      if (afterBoxPos.classList.contains(Entities.Block) || afterBoxPos.classList.contains(Tiles.Wall)) {
+        return;
       }
+      else{
+        //Move the block
+        if (afterBoxPos.classList.contains(Tiles.Goal)){
+            afterBoxPos.classList.add(Entities.BlockDone);
+        }
+        targetPos.classList.remove(Entities.Block);
+        afterBoxPos.classList.add(Entities.Block);
+
+        if (targetPos.classList.contains(Tiles.Goal)) targetPos.classList.remove(Entities.BlockDone);
+        
+        //if (boxTargetPos.classList.contains(Tiles.Goal)) boxTargetPos.classList.add(Entities.BlockDone);
+      }
+
     }
+    playerPos.classList.remove(Entities.Character);
+    targetPos.classList.add(Entities.Character);
+  }
 
 
-
-  } // move Player Up
-
-  if (a==='d') {
-    let player = document.getElementsByClassName("entity-player");
-    let playerPos = player[0];
-    let playerXcoordinate = playerPos.id.split(',')[0];
-    let playerYcoordinate = playerPos.id.split(',')[1];
-    
-    playerYcoordinate++;
-
-    let blockXcoordinate = playerXcoordinate;
-    let blockYcoordinate = playerYcoordinate + 1;
-
-    let nextId=playerXcoordinate+','+playerYcoordinate;
-    let nextTile = document.getElementById(nextId);
-    let nextIdBlock=blockXcoordinate + ',' + blockYcoordinate;
-    let nextTileBlock = document.getElementById(nextIdBlock);
-
-    if (!nextTile.classList.contains('tile-wall')) {
-    nextTile.classList.remove('tile-space');
-    nextTile.classList.add('entity-player');
-    playerPos.classList.remove('entity-player');
-    playerPos.classList.add('tile-space');
-    }
-
-    if (nextTile.classList.contains('entity-block')) 
-    {
-      if (!nextTileBlock.classList.contains('tile-wall')){
-        nextTile.classList.remove('tile-space');
-        nextTile.classList.add('entity-player');
-        nextTile.classList.remove('entity-block');
-        playerPos.classList.remove('entity-player');
-        playerPos.classList.add('tile-space');
-        nextTileBlock.classList.remove('tile-space');
-        nextTileBlock.classList.add('entity-block');
-      }
-    }
-
-
-
-  } // move Player Down
-
-  if (a==='l') {
-    let player = document.getElementsByClassName("entity-player");
-    let playerPos = player[0];
-    
-    let playerXcoordinate = playerPos.id.split(',')[0];
-    let playerYcoordinate = playerPos.id.split(',')[1];
-
-    playerXcoordinate--;
-    
-    let blockXcoordinate = playerXcoordinate - 1;
-    let blockYcoordinate = playerYcoordinate;
-    
-
-    let nextId=playerXcoordinate +',' + playerYcoordinate;
-    let nextTile = document.getElementById(nextId);
-    let nextIdBlock=blockXcoordinate + ',' + blockYcoordinate;
-    let nextTileBlock = document.getElementById(nextIdBlock);
-
-    if (!nextTile.classList.contains('tile-wall')) {
-      nextTile.classList.remove('tile-space');
-      nextTile.classList.add('entity-player');
-      playerPos.classList.remove('entity-player');
-      playerPos.classList.add('tile-space');
-      }
-
-     
-
-    if (nextTile.classList.contains('entity-block')) 
-    {
-      if (!nextTileBlock.classList.contains('tile-wall')){
-        nextTile.classList.remove('tile-space');
-        nextTile.classList.add('entity-player');
-        nextTile.classList.remove('entity-block');
-        playerPos.classList.remove('entity-player');
-        playerPos.classList.add('tile-space');
-        nextTileBlock.classList.remove('tile-space');
-        nextTileBlock.classList.add('entity-block');
-      }
-
-      if (nextTileBlock.classList.contains('tile-goal')) 
-      {
-        console.log('Gul djävel');
-        nextTileBlock.classList.remove('tile-goal');
-        nextTileBlock.classList.add('entity-block');
-      }
-
-      }
-    }
- // move Player Left
-
- }  // End movePlayer()
 
 
 
