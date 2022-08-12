@@ -1,3 +1,4 @@
+let finito=0;
 const drawMap = () => {
 
   document.getElementById("game-board").innerHTML ="";
@@ -80,22 +81,32 @@ function movePlayer(a){
       else{
         //Move the block
         if (afterBoxPos.classList.contains(Tiles.Goal)){
-            afterBoxPos.classList.add(Entities.BlockDone);
+            afterBoxPos.classList.add(Entities.BlockDone)
+       finito++;
+        } if  (finito==6 ){
+          myFunction();
         }
+        
         targetPos.classList.remove(Entities.Block);
         afterBoxPos.classList.add(Entities.Block);
 
-        if (targetPos.classList.contains(Tiles.Goal)) targetPos.classList.remove(Entities.BlockDone);
-        
-        
+        if (targetPos.classList.contains(Tiles.Goal)){
+         targetPos.classList.remove(Entities.BlockDone);
+         finito--;
+       
+        }
       }
-
+      
     }
     playerPos.classList.remove(Entities.Character);
     targetPos.classList.add(Entities.Character);
+   
   }
 
-
+  function myFunction() {
+    console.log("I QUIT!")
+    return alert(" Game finish") ;
+  }
  
 let player = document.querySelectorAll(".entity-player");
 
