@@ -84,7 +84,7 @@ function movePlayer(a){
             afterBoxPos.classList.add(Entities.BlockDone)
        finito++;
         } if  (finito==6 ){
-          myFunction();
+          endGame();
         }
         
         targetPos.classList.remove(Entities.Block);
@@ -103,7 +103,7 @@ function movePlayer(a){
    
   }
 
-  function myFunction() {
+  const endGame = ()  =>{
    
     return alert(" Game finish") ;
   }
