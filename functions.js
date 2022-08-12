@@ -104,7 +104,7 @@ function movePlayer(a){
   }
 
   function myFunction() {
-    console.log("I QUIT!")
+   
     return alert(" Game finish") ;
   }
  
